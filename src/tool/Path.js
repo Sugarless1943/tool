@@ -35,6 +35,10 @@ export default class Path {
         })
     }
 
+    reDrawCourse(item) {
+        item.change()
+    }
+
     view() {
         this.polyline && Base.component.map.removeOverlay(this.polyline);
         this.getStartEnd(() => {

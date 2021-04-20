@@ -7,16 +7,11 @@ export default class Marker {
     }
 
     set address(val) {
-        this.lat = val[0]
-        this.lng = val[1]
+        this.lng = val[0]
+        this.lat = val[1]
         this.point = new BMapGL.Point(val[0], val[1]);
         this.marker = new BMapGL.Marker(this.point, {enableDragging: true});
-        let self = this
-        this.marker.addEventListener('mouseup', e => {
-            Base.component.map.removeOverlay(self.marker)
-            self.address = [e.latLng.lng, e.latLng.lat]
-            Marker.change = new Date().getTime()
-        })
+        this.marker.addEventListener('mouseup', this.change.bind(this))
     }
 
     set name(val) {
@@ -25,5 +20,11 @@ export default class Marker {
             position: this.point,
             offset: new BMapGL.Size(0, 0),
         });
+    }
+
+    change(e) {
+        Base.component.map.removeOverlay(this.marker)
+        this.address = e ? [e.latLng.lng, e.latLng.lat] : [this.lng, this.lat]
+        Marker.change = new Date().getTime()
     }
 }

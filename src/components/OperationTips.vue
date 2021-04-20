@@ -12,13 +12,13 @@
             <i class="el-icon-close" @click="delCourse(index)"></i>
           </header>
           <main>
-            <el-input v-model="item.lat" readonly></el-input>
-            <el-input v-model="item.lng" readonly></el-input>
+            <el-input v-model.number="item.lat" @input="markChange(item)"></el-input>
+            <el-input v-model.number="item.lng" @input="markChange(item)"></el-input>
           </main>
         </li>
       </ul>
       <footer>
-        <el-button type="info" @click="pathView">预览</el-button>
+        <el-button type="primary" @click="pathView">预览</el-button>
         <el-button type="primary" @click="pathSave">保存</el-button>
       </footer>
     </section>
@@ -57,6 +57,10 @@ export default {
     pathView() {
       console.log(this.optData.path.courseList)
       this.optData.path.view()
+    },
+
+    markChange(item) {
+      this.optData.path.reDrawCourse(item)
     },
 
     delCourse(index) {

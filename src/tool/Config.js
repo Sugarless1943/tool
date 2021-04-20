@@ -487,6 +487,51 @@ const req = [
         "children": [],
         "paths": [],
         "net2_child": []
+    },
+    {
+        "id": 1618901180560,
+        "level": 1,
+        "name": "换热站(未命名)",
+        "net": 2,
+        "uid": "",
+        "address": [
+            111.92537335769497,
+            37.05138018936157
+        ],
+        "fat": null,
+        "children": [],
+        "paths": [],
+        "net2_child": []
+    },
+    {
+        "id": 1618901183212,
+        "level": 1,
+        "name": "换热站(未命名)",
+        "net": 2,
+        "uid": "",
+        "address": [
+            111.9242235266422,
+            37.044064170342445
+        ],
+        "fat": null,
+        "children": [],
+        "paths": [],
+        "net2_child": []
+    },
+    {
+        "id": 1618901185206,
+        "level": 1,
+        "name": "换热站(未命名)",
+        "net": 2,
+        "uid": "",
+        "address": [
+            111.92465471328698,
+            37.03715074294751
+        ],
+        "fat": null,
+        "children": [],
+        "paths": [],
+        "net2_child": []
     }
 ]
 
