@@ -8,6 +8,7 @@
           <el-input v-model="center[0]" placeholder="请输入内容"></el-input>
           <span>-</span>
           <el-input v-model="center[1]" placeholder="请输入内容"></el-input>
+          <i class="el-icon-aim go" @click="drawMap"></i>
         </section>
         <section class="zoom">
           <label>zoom：</label>
@@ -225,20 +226,22 @@ export default {
 
     save() {
       console.log(this.stations)
-      console.log(JSON.stringify(this.stations.map(({
-                                                      id,
-                                                      level,
-                                                      name,
-                                                      net,
-                                                      uid,
-                                                      address,
-                                                      fat,
-                                                      children,
-                                                      paths,
-                                                      net2_child
-                                                    }, index) => {
+      let res = this.stations.map(({
+                                     id,
+                                     level,
+                                     name,
+                                     net,
+                                     uid,
+                                     address,
+                                     fat,
+                                     children,
+                                     paths,
+                                     net2_child
+                                   }, index) => {
         return {id, level, name, net, uid, address, fat, children, paths, net2_child}
-      }), null, 2))
+      })
+      console.log(JSON.stringify(res), null, 2)
+      localStorage.setItem('req', JSON.stringify(res))
     },
 
     mapReset(open) {
@@ -393,6 +396,14 @@ export default {
         padding: 10px;
         text-align: left;
       }
+    }
+  }
+
+  .go {
+    margin: 10px;
+    &:hover {
+      cursor: pointer;
+      color: #00B5D0;
     }
   }
 }
