@@ -2,8 +2,9 @@ import Base from "./Base";
 
 export default class Marker {
     static change = new Date().getTime()
-    constructor(address) {
+    constructor(address, path) {
         this.address = address
+        this.path = path
     }
 
     set address(val) {
@@ -26,5 +27,9 @@ export default class Marker {
         Base.component.map.removeOverlay(this.marker)
         this.address = e ? [e.latLng.lng, e.latLng.lat] : [this.lng, this.lat]
         Marker.change = new Date().getTime()
+        // console.log(this.path, 'path')
+        if(this.path.polyline != null) {
+            this.path.view(true)
+        }
     }
 }

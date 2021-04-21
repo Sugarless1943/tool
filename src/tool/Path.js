@@ -16,7 +16,7 @@ export default class Path {
     }
 
     courseMark(e) {
-        this.courseList.push(new Marker([e.latlng.lng, e.latlng.lat]))
+        this.courseList.push(new Marker([e.latlng.lng, e.latlng.lat], this))
         this.drawCourse()
     }
 
@@ -39,14 +39,19 @@ export default class Path {
         item.change()
     }
 
-    view() {
-        this.polyline && Base.component.map.removeOverlay(this.polyline);
+    view(execute = false) {
+        // console.log(this.polyline)
+        Base.component.map.removeOverlay(this.polyline);
+        if(!execute && this.polyline) {
+            this.polyline = null
+            return
+        }
         this.getStartEnd(() => {
             let addressList = [this.start.address, this.end.address]
             if (this.courseList.length > 0) {
                 this.courseList.map((item, index) => {
                     console.log(item)
-                    addressList.splice(index + 1, 0, [item.lat, item.lng])
+                    addressList.splice(index + 1, 0, [item.lng, item.lat])
                 })
             }
 
@@ -63,7 +68,7 @@ export default class Path {
     }
 
     clean() {
-        console.log('remove')
+        // console.log('remove')
         Base.component.map.removeOverlay(this.polyline);
         Base.component.map.removeEventListener('rightclick', this.courseMark.bind(this))
     }
@@ -85,7 +90,7 @@ export default class Path {
             station_start[station_start.net == station_end.net ? 'paths' : 'net2_child'].push({
                 to: this.end.id,
                 course: this.courseList.map(item => {
-                    return [item.lat, item.lng]
+                    return [item.lng, item.lat]
                 }),
                 diam: 0,
                 len: 0

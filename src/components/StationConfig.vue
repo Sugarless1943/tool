@@ -13,52 +13,70 @@
           <el-input v-model="station.address[1]"></el-input>
           <el-button type="primary" @click="move()" style="margin-top: 5px; width: 100%" :disabled="editing">修改地址 <i class="el-icon-loading" v-show="moving"></i></el-button>
         </el-form-item>
-        <section>
-          <h6>这是路径</h6>
-          <ul v-if="station.level == 1">
-            <li v-for="(item,index) in station.paths" :key="item.to">
-              <header>
-                <span>{{ getName(item.to) }}</span>
-                <span>
+        <div class="paths" v-if="station.level == 1">
+          <section>
+            <h6>路径</h6>
+            <ul>
+              <li v-for="(item,index) in station.paths" :key="item.to">
+                <header>
+                  <span>{{ getName(item.to) }}</span>
+                  <span>
                 <i class="el-icon-close" @click="delpath(index, 'paths')"></i>
               </span>
-              </header>
-              <footer>
-                <div>
-                  <label>管径：</label>
-                  <el-input v-model="item.diam"></el-input>
-                </div>
-                <div>
-                  <label>管长：</label>
-                  <el-input v-model="item.len"></el-input>
-                </div>
-              </footer>
-            </li>
-          </ul>
-        </section>
-        <section>
-          <h6>这是与子的关系</h6>
-          <ul v-if="station.level == 1">
-            <li v-for="(item,index) in station.net2_child" :key="item.to">
-              <header>
-                <span>{{ getName(item.to) }}</span>
-                <span>
+                </header>
+<!--                <main>-->
+<!--                  <ul>-->
+<!--                    <li v-for="addr in item.course">-->
+<!--                      <el-input v-model="addr[0]"></el-input>-->
+<!--                      <el-input v-model="addr[1]"></el-input>-->
+<!--                    </li>-->
+<!--                  </ul>-->
+<!--                </main>-->
+                <footer>
+                  <div>
+                    <label>管径：</label>
+                    <el-input v-model="item.diam"></el-input>
+                  </div>
+                  <div>
+                    <label>管长：</label>
+                    <el-input v-model="item.len"></el-input>
+                  </div>
+                </footer>
+              </li>
+            </ul>
+          </section>
+          <section>
+            <h6>二网一级换热站</h6>
+            <ul>
+              <li v-for="(item,index) in station.net2_child" :key="item.to">
+                <header>
+                  <span>{{ getName(item.to) }}</span>
+                  <span>
                 <i class="el-icon-close" @click="delpath(index, 'net2_child')"></i>
               </span>
-              </header>
-              <footer>
-                <div>
-                  <label>管径：</label>
-                  <el-input v-model="item.diam"></el-input>
-                </div>
-                <div>
-                  <label>管长：</label>
-                  <el-input v-model="item.len"></el-input>
-                </div>
-              </footer>
-            </li>
-          </ul>
-        </section>
+                </header>
+<!--                <main>-->
+<!--                  <ul>-->
+<!--                    <li v-for="addr in item.course">-->
+<!--                      <el-input v-model="addr[0]"></el-input>-->
+<!--                      <el-input v-model="addr[1]"></el-input>-->
+<!--                    </li>-->
+<!--                  </ul>-->
+<!--                </main>-->
+                <footer>
+                  <div>
+                    <label>管径：</label>
+                    <el-input v-model="item.diam"></el-input>
+                  </div>
+                  <div>
+                    <label>管长：</label>
+                    <el-input v-model="item.len"></el-input>
+                  </div>
+                </footer>
+              </li>
+            </ul>
+          </section>
+        </div>
         <el-button v-if="station.level == 2 || station.level == 3" type="primary" @click="chiEdit()" style="margin: 5px 0; width: 100%" :disabled="moving">编 辑 <i class="el-icon-loading" v-show="editing"></i></el-button>
         <el-button v-if="station.level == 2 || station.level == 3" type="primary" @click="saveEdit()" style="margin: 5px 0; width: 100%" :disabled="!editing">保 存</el-button>
         <el-button type="danger" @click="delSta()" style="margin: 5px 0; width: 100%">删 除</el-button>
@@ -191,8 +209,11 @@ export default {
 
 <style lang="scss">
 #staCon {
+  height: 100%;
   main {
     padding: 10px;
+    box-sizing: border-box;
+    height: 100%;
   }
 
   .el-form {
@@ -201,6 +222,7 @@ export default {
     border: 1px solid #666666;
     box-shadow: 5px 5px 5px #444444;
     border-radius: 5px;
+    height: 100%;
 
     label {
       color: #fff;
@@ -216,6 +238,14 @@ export default {
       }
     }
 
+    .paths {
+      max-height: calc(100% - 250px);
+      overflow-y: auto;
+    }
+
+    h6 {
+      margin: 10px 0;
+    }
     ul {
       padding: 0;
       margin: 0;
@@ -262,6 +292,18 @@ export default {
 
           .el-input {
             width: 65px;
+          }
+        }
+
+        &>main {
+          padding: 0;
+          ul {
+            padding: 0;
+            margin: 0;
+            li {
+              margin-bottom: 5px;
+              display: flex;
+            }
           }
         }
 
