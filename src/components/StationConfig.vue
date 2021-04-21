@@ -14,7 +14,7 @@
           <el-button type="primary" @click="move()" style="margin-top: 5px; width: 100%" :disabled="editing">修改地址 <i class="el-icon-loading" v-show="moving"></i></el-button>
         </el-form-item>
         <div class="paths" v-if="station.level == 1">
-          <section>
+          <section v-if="station.paths.length > 0">
             <h6>路径</h6>
             <ul>
               <li v-for="(item,index) in station.paths" :key="item.to">
@@ -45,7 +45,7 @@
               </li>
             </ul>
           </section>
-          <section>
+          <section v-if="station.net2_child.length > 0">
             <h6>二网一级换热站</h6>
             <ul>
               <li v-for="(item,index) in station.net2_child" :key="item.to">

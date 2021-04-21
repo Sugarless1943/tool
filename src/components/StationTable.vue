@@ -8,13 +8,23 @@
       <header>
         <el-form :inline="true" :model="formInline" class="as-filter">
           <el-form-item>
-            <el-input v-model="formInline.filterStr" clearable class="filterStr" placeholder="名称"
+            <el-input v-model="formInline.filterStr" clearable class="filterStr" placeholder="名称/uid"
                       @keyup.enter.stop.native="onSearch"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-select v-model="formInline.level" clearable class="mediaInput" placeholder="一网/二网">
+              <el-option
+                  v-for="item in netOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+              </el-option>
+            </el-select>
           </el-form-item>
           <el-form-item>
             <el-select v-model="formInline.level" clearable class="mediaInput" placeholder="级别">
               <el-option
-                  v-for="item in flagOptions"
+                  v-for="item in levelOptions"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -44,10 +54,22 @@
           <el-table-column
               prop="name"
               label="站名">
+            <template slot-scope="scope">
+              <article class="tabEdit">
+                <span>{{ scope.row.name }}</span>
+                <i class="el-icon-edit"></i>
+              </article>
+            </template>
           </el-table-column>
           <el-table-column
               prop="uid"
               label="uid">
+            <template slot-scope="scope">
+              <article class="tabEdit">
+                <span>{{ scope.row.uid }}</span>
+                <i class="el-icon-edit"></i>
+              </article>
+            </template>
           </el-table-column>
           <el-table-column
               prop="net"
@@ -58,8 +80,18 @@
               label="级别">
           </el-table-column>
           <el-table-column
+              prop="addr"
+              label="位置">
+            <template slot-scope="scope">
+              {{ scope.row.address[0] }} - {{ scope.row.address[1] }}
+            </template>
+          </el-table-column>
+          <el-table-column
               prop="id"
               label="创建时间">
+            <template slot-scope="scope">
+              {{ dateFormat(scope.row.id) }}
+            </template>
           </el-table-column>
         </el-table>
       </main>
@@ -79,6 +111,8 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
   name: "StationTable",
 
@@ -89,7 +123,30 @@ export default {
         filterStr: '',
         level: null
       },
-      flagOptions: [],
+      netOptions: [
+        {
+          label: "一网",
+          val: 1
+        },
+        {
+          label: "二网",
+          val: 2
+        }
+      ],
+      levelOptions: [
+        {
+          label: "一级",
+          val: 1
+        },
+        {
+          label: "二级",
+          val: 2
+        },
+        {
+          label: "三级",
+          val: 3
+        }
+      ],
       tableData: [],
       currentPage: 1,
       pageSize: 10,
@@ -101,6 +158,7 @@ export default {
     open(data) {
       this.dialogVisible = true
       this.tableData = data
+      console.log(data)
     },
 
     onSearch() {
@@ -126,6 +184,14 @@ export default {
     tableIndex(index) {
       return (index + 1) + ((this.currentPage - 1) * this.pageSize)
     },
+
+    dateFormat(time) {
+      return moment(time).format("YYYY-MM-DD HH:mm:ss")
+    }
+  },
+
+  created() {
+    console.log(this)
   }
 }
 </script>
@@ -141,5 +207,16 @@ export default {
     margin-bottom: 10px;
   }
 
+  .tabEdit {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    i {
+      &:hover {
+        color: #00B5D0;
+      }
+    }
+  }
 }
 </style>
