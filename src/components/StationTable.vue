@@ -55,9 +55,10 @@
               prop="name"
               label="站名">
             <template slot-scope="scope">
-              <article class="tabEdit">
-                <span>{{ scope.row.name }}</span>
-                <i class="el-icon-edit"></i>
+              <el-input v-model="scope.row.name" v-if="scope.row.name_editing"></el-input>
+              <article class="tabEdit" v-else>
+                <span>{{ scope.row.name }} {{ scope.row.name_editing }}</span>
+                <i class="el-icon-edit" @click="openEdit(scope.row, 'name_editing')"></i>
               </article>
             </template>
           </el-table-column>
@@ -65,9 +66,10 @@
               prop="uid"
               label="uid">
             <template slot-scope="scope">
-              <article class="tabEdit">
+              <el-input v-model="scope.row.uid" v-if="scope.row.uid_editing"></el-input>
+              <article class="tabEdit" v-else>
                 <span>{{ scope.row.uid }}</span>
-                <i class="el-icon-edit"></i>
+                <i class="el-icon-edit" @click="openEdit(scope.row, 'uid_editing')"></i>
               </article>
             </template>
           </el-table-column>
@@ -118,6 +120,7 @@ export default {
 
   data() {
     return {
+      test: false,
       dialogVisible: false,
       formInline: {
         filterStr: '',
@@ -157,8 +160,40 @@ export default {
   methods: {
     open(data) {
       this.dialogVisible = true
-      this.tableData = data
-      console.log(data)
+      // console.log(data)
+      this.tableData = data.map(item => {
+        item.name_editing = false
+        item.uid_editing = false
+        // this.editBind(item)
+        return item
+      })
+    },
+
+    openEdit(row, field) {
+      this.tableData.forEach(item => {
+        item.name_editing = false
+        item.uid_editing = false
+        item.id == row.id && (item[field] = true)
+      })
+      this.tableData.splice(0,0)
+    },
+
+    editBind(item,...args) {
+      args.map(newField => {
+        console.log(item, newField)
+        // item[newField] = false
+        // this.$set(item, newField, false)
+        // Object.defineProperty(item, newField+'_observe', {
+        //   set(val) {
+        //     item[newField] = val
+        //   },
+        //   get() {
+        //     return item[newField]
+        //   }
+        // })
+      })
+
+      return item
     },
 
     onSearch() {
@@ -166,7 +201,9 @@ export default {
     },
 
     onReset() {
-
+      this.tableData.map(item => {
+        item.name_editing = true
+      })
     },
 
     handleClose() {
@@ -215,6 +252,7 @@ export default {
     i {
       &:hover {
         color: #00B5D0;
+        cursor: pointer;
       }
     }
   }
