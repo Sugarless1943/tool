@@ -164,7 +164,7 @@ export default {
       this.tableData = data.map(item => {
         item.name_editing = false
         item.uid_editing = false
-        // this.editBind(item)
+        this.editBind(item, 'name_editing', 'uid_editing')
         return item
       })
     },
@@ -173,26 +173,27 @@ export default {
       this.tableData.forEach(item => {
         item.name_editing = false
         item.uid_editing = false
-        item.id == row.id && (item[field] = true)
+        item.id == row.id && (item[field+'_ob'] = true)
       })
       this.tableData.splice(0,0)
     },
 
     editBind(item,...args) {
       args.map(newField => {
-        console.log(item, newField)
-        // item[newField] = false
-        // this.$set(item, newField, false)
-        // Object.defineProperty(item, newField+'_observe', {
-        //   set(val) {
-        //     item[newField] = val
-        //   },
-        //   get() {
-        //     return item[newField]
-        //   }
-        // })
+        // item[newField+'_observe'] = false
+        console.log(item)
+        Object.defineProperty(item, newField+'_ob', {
+          set(val) {
+            console.log(this)
+            this[newField] = val
+          },
+          get() {
+            return this[newField]
+          }
+        })
       })
 
+      console.log(item, 'itemmmmm')
       return item
     },
 
