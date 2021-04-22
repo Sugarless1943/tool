@@ -55,9 +55,9 @@
               prop="name"
               label="站名">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.name" v-if="scope.row.name_editing"></el-input>
+              <el-input v-model="scope.row.name" v-if="scope.row.name_editing" @blur="editBlur(scope.row, 'name_editing_ob')" :id="'input_'+scope.row.id"></el-input>
               <article class="tabEdit" v-else>
-                <span>{{ scope.row.name }} {{ scope.row.name_editing }}</span>
+                <span>{{ scope.row.name }}</span>
                 <i class="el-icon-edit" @click="openEdit(scope.row, 'name_editing')"></i>
               </article>
             </template>
@@ -66,7 +66,7 @@
               prop="uid"
               label="uid">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.uid" v-if="scope.row.uid_editing"></el-input>
+              <el-input v-model="scope.row.uid" v-if="scope.row.uid_editing" @blur="editBlur(scope.row, 'uid_editing_ob')" :id="'input_'+scope.row.id"></el-input>
               <article class="tabEdit" v-else>
                 <span>{{ scope.row.uid }}</span>
                 <i class="el-icon-edit" @click="openEdit(scope.row, 'uid_editing')"></i>
@@ -160,7 +160,6 @@ export default {
   methods: {
     open(data) {
       this.dialogVisible = true
-      // console.log(data)
       this.tableData = data.map(item => {
         item.name_editing = false
         item.uid_editing = false
@@ -170,21 +169,28 @@ export default {
     },
 
     openEdit(row, field) {
-      this.tableData.forEach(item => {
-        item.name_editing = false
-        item.uid_editing = false
-        item.id == row.id && (item[field+'_ob'] = true)
+      this.$nextTick().then(_ => {
+        document.getElementById('input_'+row.id).focus()
       })
+      row[field+'_ob'] = true
+      this.tableData.splice(0,0)
+    },
+
+    editBlur(row, field) {
+      row[field] = false
       this.tableData.splice(0,0)
     },
 
     editBind(item,...args) {
       args.map(newField => {
-        // item[newField+'_observe'] = false
-        console.log(item)
+        let self = this
         Object.defineProperty(item, newField+'_ob', {
           set(val) {
-            console.log(this)
+            self.tableData.forEach(item => {
+              item.name_editing = false
+              item.uid_editing = false
+            })
+            if(!val) self.editServer(item)
             this[newField] = val
           },
           get() {
@@ -195,6 +201,10 @@ export default {
 
       console.log(item, 'itemmmmm')
       return item
+    },
+
+    editServer(station) {
+      console.log(station.name, '调接口吧')
     },
 
     onSearch() {
