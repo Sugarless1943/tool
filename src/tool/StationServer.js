@@ -23,4 +23,9 @@ export default class StationServer {
         })
     }
 
+    static save(stations) {
+        return StationServer.Axios.post(`/save`, stations).then(response => {
+            return response.data
+        })
+    }
 }

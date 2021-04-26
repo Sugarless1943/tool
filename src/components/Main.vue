@@ -223,7 +223,7 @@ export default {
     },
 
     save() {
-      console.log(this.stations)
+      // console.log(this.stations)
       let res = this.stations.map(({
                                      id,
                                      level,
@@ -239,7 +239,18 @@ export default {
         return {id, level, name, net, uid, address, fat, children, paths, net2_child}
       })
       console.log(JSON.stringify(res), null, 2)
-      localStorage.setItem('req', JSON.stringify(res))
+      StationServer.save(res).then(() => {
+        this.$message({
+          type: 'success',
+          message: '保存成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'error',
+          message: '保存失败!'
+        })
+      })
+      // localStorage.setItem('req', JSON.stringify(res))
     },
 
     mapReset(open) {
