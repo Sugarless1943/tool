@@ -130,6 +130,17 @@ export default {
           fat.children.length == 0 && Base.component.stationMap.delete(fat.id)
         }
       }
+      if(this.station.net == 2 && this.station.level == 1) {
+        Base.component.stations.forEach(item => {
+            if(item.net == 1 && item.level==1 && item.net2_child.length > 0) {
+              item.net2_child.map((chi,index) => {
+                if(chi.to == this.station.id) {
+                    item.net2_child.splice(index, 1)
+                }
+              })
+            }
+        })
+      }
       Base.component.stations.forEach(item => {
         if (item.fat == this.station.id) {
           item.fat = null
