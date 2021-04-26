@@ -10,7 +10,6 @@
 </template>
 
 <script>
-import Base from '../tool/Base'
 import * as echarts from "echarts";
 
 export default {
@@ -118,7 +117,7 @@ export default {
           let station = this.data.get(item)
           return {
             name: station.name,
-            value: 1,
+            value: "",
             children: this.setChidren(station)
           }
         })
