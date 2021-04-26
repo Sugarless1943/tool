@@ -146,7 +146,6 @@ export default {
       Base.component.stationMap.forEach(item => {
         Base.component.stations.push(item)
       })
-      Base.component.refresh()
     },
 
     chiEdit() {
