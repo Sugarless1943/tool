@@ -111,7 +111,7 @@ export default {
       },
 
       markMove: e=> {
-        this.station.point = new BMapGL.Point(e.latlng.lng, e.latlng.lat);
+        this.station.point = new window.BMapGL.Point(e.latlng.lng, e.latlng.lat);
         this.station.label.setPosition(this.station.point)
       }
     }

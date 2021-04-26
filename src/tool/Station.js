@@ -9,7 +9,7 @@ export default class Station {
         this.net = net
 
         let imgUrl = require(`../assets/level${this.net}_${this.level}.png`)
-        this.icon = new BMapGL.Icon(imgUrl, new BMapGL.Size(20, 25), {anchor: new BMapGL.Size(10, 25)});
+        this.icon = new window.BMapGL.Icon(imgUrl, new window.BMapGL.Size(20, 25), {anchor: new window.BMapGL.Size(10, 25)});
 
         this.uid = uid ? uid : ""
         this.address = e ? [e.latlng.lng, e.latlng.lat] : address
@@ -28,12 +28,12 @@ export default class Station {
     }
 
     draw() {
-        this.point = new BMapGL.Point(this.address[0], this.address[1]);
-        this.marker = new BMapGL.Marker(this.point, {icon: this.icon});
+        this.point = new window.BMapGL.Point(this.address[0], this.address[1]);
+        this.marker = new window.BMapGL.Marker(this.point, {icon: this.icon});
         this.configBind()
-        this.label = new BMapGL.Label(this.name, {
+        this.label = new window.BMapGL.Label(this.name, {
             position: this.point,
-            offset: new BMapGL.Size(0, 0),
+            offset: new window.BMapGL.Size(0, 0),
         });
         Base.component.map.addOverlay(this.marker)
         Base.component.map.addOverlay(this.label)
@@ -167,18 +167,18 @@ export default class Station {
             if (this.polygon) Base.component.map.removeOverlay(this.polygon)
             // let points = this.children.map(item => {
             //     let child = Base.component.stationMap.get(item)
-            //     return new BMapGL.Point(child.address[0], child.address[1])
+            //     return new window.BMapGL.Point(child.address[0], child.address[1])
             // })
 
             let points = []
             this.polylineList = []
             this.children.map(item => {
                 let child = Base.component.stationMap.get(item)
-                let point = new BMapGL.Point(child.address[0], child.address[1])
+                let point = new window.BMapGL.Point(child.address[0], child.address[1])
                 points.push(point)
 
                 console.log([this.point, point])
-                this.polylineList.push(new BMapGL.Polyline([this.point, point], {
+                this.polylineList.push(new window.BMapGL.Polyline([this.point, point], {
                     strokeColor: "blue",
                     strokeStyle: "dashed",
                     strokeWeight: 1,
@@ -189,7 +189,7 @@ export default class Station {
             // console.log(polylineList)
 
 
-            this.polygon = new BMapGL.Polygon(points, {
+            this.polygon = new window.BMapGL.Polygon(points, {
                 strokeColor: colors[`n${this.net}l${(this.level - 1)}`],
                 strokeWeight: 2,
                 fillColor: '#fff',
@@ -234,10 +234,10 @@ export default class Station {
                     // console.log(list)
 
                     let pointList = list.map((item) => {
-                        return new BMapGL.Point(item[0], item[1]);
+                        return new window.BMapGL.Point(item[0], item[1]);
                     });
                     // console.log(item, 'itemmmmmmmmmmmmmm')
-                    this.pathLineList.push(new BMapGL.Polyline(pointList, {
+                    this.pathLineList.push(new window.BMapGL.Polyline(pointList, {
                         strokeColor: item.color,
                         strokeWeight: 2,
                         strokeOpacity: 0.5,

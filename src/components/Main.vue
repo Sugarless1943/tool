@@ -97,7 +97,7 @@ export default {
 
   methods: {
     drawMap() {
-      let point = new BMapGL.Point(this.center[0], this.center[1]);
+      let point = new window.BMapGL.Point(this.center[0], this.center[1]);
       this.map.centerAndZoom(point, this.zoomNum);
       this.map.enableScrollWheelZoom(true);
     },
@@ -212,7 +212,7 @@ export default {
         this.stations = res.map(item => {
           return new Station(item)
         })
-        this.map = new BMapGL.Map("container");
+        this.map = new window.BMapGL.Map("container");
         Base.component = this
         this.drawMap()
       })

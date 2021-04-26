@@ -56,9 +56,9 @@ export default class Path {
             }
 
             let pointList = addressList.map((item) => {
-                return new BMapGL.Point(item[0], item[1]);
+                return new window.BMapGL.Point(item[0], item[1]);
             });
-            this.polyline = new BMapGL.Polyline(pointList, {
+            this.polyline = new window.BMapGL.Polyline(pointList, {
                 strokeColor: "blue",
                 strokeWeight: 2,
                 strokeOpacity: 0.5,
