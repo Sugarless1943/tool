@@ -8,11 +8,11 @@
       <header>
         <el-form :inline="true" :model="formInline" class="as-filter">
           <el-form-item>
-            <el-input v-model="formInline.filterStr" clearable class="filterStr" placeholder="名称/uid"
+            <el-input v-model="formInline.str" clearable class="filterStr" placeholder="名称/uid"
                       @keyup.enter.stop.native="onSearch"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-select v-model="formInline.level" clearable class="mediaInput" placeholder="一网/二网">
+            <el-select v-model="formInline.net" clearable placeholder="一网/二网">
               <el-option
                   v-for="item in netOptions"
                   :key="item.value"
@@ -22,7 +22,7 @@
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-select v-model="formInline.level" clearable class="mediaInput" placeholder="级别">
+            <el-select v-model="formInline.level" clearable placeholder="级别">
               <el-option
                   v-for="item in levelOptions"
                   :key="item.value"
@@ -55,7 +55,8 @@
               prop="name"
               label="站名">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.name" v-if="scope.row.name_editing" @blur="editBlur(scope.row, 'name_editing_ob')" :id="'input_'+scope.row.id"></el-input>
+              <el-input v-model="scope.row.name" v-if="scope.row.name_editing"
+                        @blur="editBlur(scope.row, 'name_editing_ob')" :id="'input_'+scope.row.id"></el-input>
               <article class="tabEdit" v-else>
                 <span>{{ scope.row.name }}</span>
                 <i class="el-icon-edit" @click="openEdit(scope.row, 'name_editing')"></i>
@@ -66,7 +67,8 @@
               prop="uid"
               label="uid">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.uid" v-if="scope.row.uid_editing" @blur="editBlur(scope.row, 'uid_editing_ob')" :id="'input_'+scope.row.id"></el-input>
+              <el-input v-model="scope.row.uid" v-if="scope.row.uid_editing"
+                        @blur="editBlur(scope.row, 'uid_editing_ob')" :id="'input_'+scope.row.id"></el-input>
               <article class="tabEdit" v-else>
                 <span>{{ scope.row.uid }}</span>
                 <i class="el-icon-edit" @click="openEdit(scope.row, 'uid_editing')"></i>
@@ -103,7 +105,7 @@
             @current-change="handleCurrentChange"
             :current-page.sync="currentPage"
             :page-sizes="[10, 20, 30, 40]"
-            :page-size="pageSize"
+            :page-size="formInline.pageSize"
             layout="total, sizes, prev, pager, next, jumper"
             :total=pageTotal>
         </el-pagination>
@@ -114,6 +116,7 @@
 
 <script>
 import moment from 'moment'
+import StationServer from "../tool/StationServer";
 
 export default {
   name: "StationTable",
@@ -123,74 +126,83 @@ export default {
       test: false,
       dialogVisible: false,
       formInline: {
-        filterStr: '',
-        level: null
+        str: '',
+        level: null,
+        net: null,
+        pageIndex: 0,
+        pageSize: 10
       },
+      currentPage: 1,
       netOptions: [
         {
           label: "一网",
-          val: 1
+          value: 1
         },
         {
           label: "二网",
-          val: 2
+          value: 2
         }
       ],
       levelOptions: [
         {
           label: "一级",
-          val: 1
+          value: 1
         },
         {
           label: "二级",
-          val: 2
+          value: 2
         },
         {
           label: "三级",
-          val: 3
+          value: 3
         }
       ],
       tableData: [],
-      currentPage: 1,
-      pageSize: 10,
       pageTotal: 0
     }
   },
 
   methods: {
-    open(data) {
+    open() {
+      this.getTableList()
       this.dialogVisible = true
-      this.tableData = data.map(item => {
-        item.name_editing = false
-        item.uid_editing = false
-        this.editBind(item, 'name_editing', 'uid_editing')
-        return item
+    },
+
+    getTableList() {
+      StationServer.findPage(this.formInline).then(res => {
+        this.pageTotal = res.count
+        this.tableData = res.data.map(item => {
+          item.name_editing = false
+          item.uid_editing = false
+          this.editBind(item, 'name_editing', 'uid_editing')
+          return item
+        })
       })
     },
 
     openEdit(row, field) {
       this.$nextTick().then(_ => {
-        document.getElementById('input_'+row.id).focus()
+        document.getElementById('input_' + row.id).focus()
       })
-      row[field+'_ob'] = true
-      this.tableData.splice(0,0)
+      row[field + '_ob'] = true
+      this.tableData.splice(0, 0)
     },
 
     editBlur(row, field) {
       row[field] = false
-      this.tableData.splice(0,0)
+      this.tableData.splice(0, 0)
     },
 
-    editBind(item,...args) {
+    editBind(item, ...args) {
       args.map(newField => {
         let self = this
-        Object.defineProperty(item, newField+'_ob', {
+        Object.defineProperty(item, newField + '_ob', {
           set(val) {
             self.tableData.forEach(item => {
               item.name_editing = false
               item.uid_editing = false
             })
-            if(!val) self.editServer(item)
+            if (!val) self.editServer(item)
             this[newField] = val
           },
           get() {
@@ -199,38 +211,59 @@ export default {
         })
       })
 
-      console.log(item, 'itemmmmm')
       return item
     },
 
     editServer(station) {
-      console.log(station.name, '调接口吧')
+      StationServer.edit(station).then(res => {
+        this.$message({
+          type: 'success',
+          message: '修改成功!'
+        })
+      }).catch(_=> {
+        this.$message({
+          type: 'error',
+          message: '修改失败!'
+        })
+      })
     },
 
     onSearch() {
-
+      this.formInline.pageIndex = 0
+      this.currentPage = 1
+      this.getTableList()
     },
 
     onReset() {
-      this.tableData.map(item => {
-        item.name_editing = true
-      })
+      this.formInline = {
+        str: '',
+        level: null,
+        net: null,
+        pageIndex: 0,
+        pageSize: 10
+      }
+      this.getTableList()
     },
 
     handleClose() {
       this.dialogVisible = false
     },
 
-    handleSizeChange() {
-
+    handleSizeChange(val) {
+      this.formInline.pageSize = val
+      this.formInline.pageIndex = 0
+      this.currentPage = this.formInline.pageIndex + 1
+      this.getTableList()
     },
 
-    handleCurrentChange() {
-
+    handleCurrentChange(val) {
+      this.formInline.pageIndex = this.formInline.pageSize * (val - 1)
+      this.currentPage = val
+      this.getTableList()
     },
 
     tableIndex(index) {
-      return (index + 1) + ((this.currentPage - 1) * this.pageSize)
+      return index + 1
     },
 
     dateFormat(time) {

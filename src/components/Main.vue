@@ -274,7 +274,7 @@ export default {
     },
 
     stationTable() {
-      this.$refs.staTable.open(this.stations)
+      this.$refs.staTable.open()
     }
   },
 

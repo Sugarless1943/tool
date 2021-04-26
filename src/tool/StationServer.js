@@ -11,4 +11,16 @@ export default class StationServer {
         })
     }
 
+    static findPage(param) {
+        return StationServer.Axios.post(`/findPage`, param).then(response => {
+            return response.data
+        })
+    }
+
+    static edit({id, name, uid}) {
+        return StationServer.Axios.post(`/update`, {id, name, uid}).then(response => {
+            return response.data
+        })
+    }
+
 }
