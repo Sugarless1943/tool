@@ -225,6 +225,7 @@ export default {
           type: 'error',
           message: '修改失败!'
         })
+        this.getTableList()
       })
     },
 
@@ -247,6 +248,7 @@ export default {
 
     handleClose() {
       this.dialogVisible = false
+      this.$emit('close')
     },
 
     handleSizeChange(val) {
@@ -272,7 +274,7 @@ export default {
   },
 
   created() {
-    console.log(this)
+    // console.log(this)
   }
 }
 </script>

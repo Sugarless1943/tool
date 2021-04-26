@@ -32,7 +32,7 @@
         <StationConfig v-if="operationFlag == 2" ref="con"></StationConfig>
       </footer>
     </main>
-    <StationTable ref="staTable"></StationTable>
+    <StationTable ref="staTable" @close="init"></StationTable>
     <StationTree ref="staTree"></StationTree>
   </div>
 </template>
@@ -45,12 +45,12 @@ import StationView from "./StationView";
 import StationConfig from "./StationConfig";
 import OperationTips from "./OperationTips";
 import {Stations} from '../tool/Config'
-import bus from '../tool/bus'
 import Path from '../tool/Path'
 import Marker from '../tool/Marker'
 import StationTable from "./StationTable";
 import View from '../tool/View'
 import StationTree from "./StationTree";
+import StationServer from "../tool/StationServer";
 
 export default {
   name: "Main",
@@ -97,13 +97,13 @@ export default {
 
   methods: {
     drawMap() {
-      let point = new BMapGL.Point(this.center[0], this.center[1]);
+      let point = new window.BMapGL.Point(this.center[0], this.center[1]);
       this.map.centerAndZoom(point, this.zoomNum);
       this.map.enableScrollWheelZoom(true);
     },
 
     refresh() {
-      // console.log('refresh')
+      console.log('refresh')
       this.stationFresh()
       this.path && this.path.clean()
       this.path = null
@@ -116,7 +116,7 @@ export default {
     stationFresh() {
       this.map.clearOverlays()
       this.staionMap = new Map()
-      // console.log(this.stations, 'stations')
+      console.log(this.stations, 'stations')
       this.stations.map(item => {
         item.draw()
         this.stationMap.set(item.id, item)
@@ -208,16 +208,14 @@ export default {
     },
 
     init() {
-      this.map = new BMapGL.Map("container");
-      Base.component = this
-      this.drawMap()
-
-      //是否需要感知类型转换换热站
-      if (this.stations.length > 0) {
-        this.stations = this.stations.map(item => {
+      StationServer.findAll().then(res => {
+        this.stations = res.map(item => {
           return new Station(item)
         })
-      }
+        this.map = new window.BMapGL.Map("container");
+        Base.component = this
+        this.drawMap()
+      })
     },
 
     pathSave() {
