@@ -152,11 +152,7 @@ export default {
           }
         })
       })
-      Base.component.stationMap.delete(this.station.id)
-      Base.component.stations = []
-      Base.component.stationMap.forEach(item => {
-        Base.component.stations.push(item)
-      })
+      Base.stationsFilter(this.station.id)
     },
 
     chiEdit() {
@@ -166,9 +162,13 @@ export default {
 
     saveEdit() {
       this.editing = false
-      this.station.children = Base.setChildren(this.station)
+      this.station.children = Base.setChildren(this.station, false)
       console.log(this.station.children)
-      this.refresh()
+      if(this.station.level > 1 && this.station.children.length == 0) {
+        Base.stationsFilter(this.station.id)
+      }else {
+        this.refresh()
+      }
     },
 
     refresh() {

@@ -41,8 +41,12 @@ export default class Base {
         })
     }
 
-    static setChildren({net, level, id}) {
+    static setChildren({net, level, id}, tipsShow = true) {
         let doms = document.querySelectorAll(`.markern${net}l${(level - 1)}`)
+        if (doms.length == 0) {
+            tipsShow && Base.component.$message.warning('请至少选择一个换热站');
+            return []
+        }
         let children = []
         doms.forEach(item => {
             let item_id = item.getAttribute("id")*1
@@ -53,10 +57,6 @@ export default class Base {
         Base.component.stations.map(item => {
             if(item.fat == id && !children.includes(item.id)) item.fat = null
         })
-        if (doms.length == 0) {
-            this.$message.warning('请至少选择一个换热站');
-            return
-        }
         return children
     }
 
@@ -78,5 +78,13 @@ export default class Base {
             }
             return pre
         }, [])
+    }
+
+    static stationsFilter(id) {
+        Base.component.stationMap.delete(id)
+        Base.component.stations = []
+        Base.component.stationMap.forEach(item => {
+            Base.component.stations.push(item)
+        })
     }
 }

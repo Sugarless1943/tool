@@ -10,10 +10,10 @@
           <el-input v-model="center[1]" placeholder="请输入内容"></el-input>
           <i class="el-icon-aim go" @click="drawMap"></i>
         </section>
-        <section class="zoom">
-          <label>zoom：</label>
-          <el-input-number v-model="zoomNum" :min="1" :max="20" size="mini" label="描述文字"></el-input-number>
-        </section>
+<!--        <section class="zoom">-->
+<!--          <label>zoom：</label>-->
+<!--          <el-input-number v-model="zoomNum" :min="1" :max="20" size="mini" label="描述文字"></el-input-number>-->
+<!--        </section>-->
       </header>
       <footer>
         <el-button type="primary" @click="stationTree()">换热站关系预览</el-button>
@@ -69,6 +69,7 @@ export default {
         let children = []
         if (this.choose.level > 1) {
           children = Base.setChildren({id: newId, ...this.choose})
+          if(children.length == 0) return
         }
         // console.log(children)
         let station = new Station({
