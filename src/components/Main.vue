@@ -14,6 +14,9 @@
 <!--          <label>zoom：</label>-->
 <!--          <el-input-number v-model="zoomNum" :min="1" :max="20" size="mini" label="描述文字"></el-input-number>-->
 <!--        </section>-->
+        <section>
+          <el-button type="primary" @click="mapStyleSwitch"><i class="el-icon-location-information"></i></el-button>
+        </section>
       </header>
       <footer>
         <el-button type="primary" @click="stationTree()">换热站关系预览</el-button>
@@ -92,15 +95,27 @@ export default {
         e.domEvent.stopPropagation()
       },
       stationMap: new Map(),
-      path: null
+      path: null,
+      mapStyle: false
     }
   },
 
   methods: {
     drawMap() {
+      console.log('draw')
       let point = new window.BMapGL.Point(this.center[0], this.center[1]);
       this.map.centerAndZoom(point, this.zoomNum);
       this.map.enableScrollWheelZoom(true);
+      this.mapStyleChange()
+    },
+
+    mapStyleSwitch() {
+      this.mapStyle = !this.mapStyle
+      this.mapStyleChange()
+    },
+
+    mapStyleChange() {
+      this.map.setMapStyleV2({styleId: this.mapStyle ? '' : 'c522f15ba9feaa78df940823e01dc1f4'})
     },
 
     refresh() {
