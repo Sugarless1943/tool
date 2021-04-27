@@ -9,8 +9,8 @@
           <el-input v-model="station.uid"></el-input>
         </el-form-item>
         <el-form-item label="地址：">
-          <el-input v-model="station.address[0]" style="margin-bottom: 5px"></el-input>
-          <el-input v-model="station.address[1]"></el-input>
+          <el-input v-model="station.address[0]" style="margin-bottom: 5px" readonly></el-input>
+          <el-input v-model="station.address[1]" readonly></el-input>
           <el-button type="primary" @click="move()" style="margin-top: 5px; width: 100%" :disabled="editing">修改地址 <i class="el-icon-loading" v-show="moving"></i></el-button>
         </el-form-item>
         <div class="paths" v-if="station.level == 1">
@@ -106,13 +106,13 @@ export default {
       markMouseup: e=> {
         this.station.address = [e.latLng.lng, e.latLng.lat]
         Base.component.map.removeEventListener('mousemove', this.markMove)
-        this.moving = false
-        this.refresh()
+        this.station.pathView(true)
+        // this.moving = false
+        // this.refresh()
       },
 
       markMove: e=> {
-        this.station.point = new window.BMapGL.Point(e.latlng.lng, e.latlng.lat);
-        this.station.label.setPosition(this.station.point)
+        this.station.label.setPosition(this.station.marker.getPosition())
       }
     }
   },
