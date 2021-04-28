@@ -11,7 +11,8 @@
         <el-form-item label="地址：">
           <el-input v-model="station.address[0]" style="margin-bottom: 5px" readonly></el-input>
           <el-input v-model="station.address[1]" readonly></el-input>
-          <el-button type="primary" @click="move()" style="margin-top: 5px; width: 100%" :disabled="editing">修改地址 <i class="el-icon-loading" v-show="moving"></i></el-button>
+          <el-button type="primary" @click="move()" style="margin-top: 5px; width: 100%" :disabled="editing">修改地址 <i
+              class="el-icon-loading" v-show="moving"></i></el-button>
         </el-form-item>
         <div class="paths" v-if="station.level == 1">
           <section v-if="station.paths.length > 0">
@@ -21,17 +22,18 @@
                 <header>
                   <span>{{ getName(item.to) }}</span>
                   <span>
+                    <i class="el-icon-edit" @click="editPath(index)"></i>
                 <i class="el-icon-close" @click="delpath(index, 'paths')"></i>
               </span>
                 </header>
-<!--                <main>-->
-<!--                  <ul>-->
-<!--                    <li v-for="addr in item.course">-->
-<!--                      <el-input v-model="addr[0]"></el-input>-->
-<!--                      <el-input v-model="addr[1]"></el-input>-->
-<!--                    </li>-->
-<!--                  </ul>-->
-<!--                </main>-->
+                <!--                <main>-->
+                <!--                  <ul>-->
+                <!--                    <li v-for="addr in item.course">-->
+                <!--                      <el-input v-model="addr[0]"></el-input>-->
+                <!--                      <el-input v-model="addr[1]"></el-input>-->
+                <!--                    </li>-->
+                <!--                  </ul>-->
+                <!--                </main>-->
                 <footer>
                   <div>
                     <label>管径：</label>
@@ -55,14 +57,14 @@
                 <i class="el-icon-close" @click="delpath(index, 'net2_child')"></i>
               </span>
                 </header>
-<!--                <main>-->
-<!--                  <ul>-->
-<!--                    <li v-for="addr in item.course">-->
-<!--                      <el-input v-model="addr[0]"></el-input>-->
-<!--                      <el-input v-model="addr[1]"></el-input>-->
-<!--                    </li>-->
-<!--                  </ul>-->
-<!--                </main>-->
+                <!--                <main>-->
+                <!--                  <ul>-->
+                <!--                    <li v-for="addr in item.course">-->
+                <!--                      <el-input v-model="addr[0]"></el-input>-->
+                <!--                      <el-input v-model="addr[1]"></el-input>-->
+                <!--                    </li>-->
+                <!--                  </ul>-->
+                <!--                </main>-->
                 <footer>
                   <div>
                     <label>管径：</label>
@@ -77,8 +79,12 @@
             </ul>
           </section>
         </div>
-        <el-button v-if="station.level == 2 || station.level == 3" type="primary" @click="chiEdit()" style="margin: 5px 0; width: 100%" :disabled="moving">编 辑 <i class="el-icon-loading" v-show="editing"></i></el-button>
-        <el-button v-if="station.level == 2 || station.level == 3" type="primary" @click="saveEdit()" style="margin: 5px 0; width: 100%" :disabled="!editing">保 存</el-button>
+        <el-button v-if="station.level == 2 || station.level == 3" type="primary" @click="chiEdit()"
+                   style="margin: 5px 0; width: 100%" :disabled="moving">编 辑 <i class="el-icon-loading"
+                                                                                v-show="editing"></i></el-button>
+        <el-button v-if="station.level == 2 || station.level == 3" type="primary" @click="saveEdit()"
+                   style="margin: 5px 0; width: 100%" :disabled="!editing">保 存
+        </el-button>
         <el-button type="danger" @click="delSta()" style="margin: 5px 0; width: 100%">删 除</el-button>
       </el-form>
     </main>
@@ -87,6 +93,9 @@
 
 <script>
 import Base from '../tool/Base'
+import Path from '../tool/Path'
+import Marker from "../tool/Marker";
+import {getConfig} from "../tool/Config";
 
 export default {
   name: "StationConfig",
@@ -103,7 +112,7 @@ export default {
         Base.component.map.addEventListener('mousemove', this.markMove)
       },
 
-      markMouseup: e=> {
+      markMouseup: e => {
         this.station.address = [e.latLng.lng, e.latLng.lat]
         Base.component.map.removeEventListener('mousemove', this.markMove)
         this.station.pathView(true)
@@ -111,7 +120,7 @@ export default {
         // this.refresh()
       },
 
-      markMove: e=> {
+      markMove: e => {
         this.station.label.setPosition(this.station.marker.getPosition())
       }
     }
@@ -130,15 +139,15 @@ export default {
           fat.children.length == 0 && Base.component.stationMap.delete(fat.id)
         }
       }
-      if(this.station.net == 2 && this.station.level == 1) {
+      if (this.station.net == 2 && this.station.level == 1) {
         Base.component.stations.forEach(item => {
-            if(item.net == 1 && item.level==1 && item.net2_child.length > 0) {
-              item.net2_child.map((chi,index) => {
-                if(chi.to == this.station.id) {
-                    item.net2_child.splice(index, 1)
-                }
-              })
-            }
+          if (item.net == 1 && item.level == 1 && item.net2_child.length > 0) {
+            item.net2_child.map((chi, index) => {
+              if (chi.to == this.station.id) {
+                item.net2_child.splice(index, 1)
+              }
+            })
+          }
         })
       }
       Base.component.stations.forEach(item => {
@@ -164,9 +173,9 @@ export default {
       this.editing = false
       this.station.children = Base.setChildren(this.station, false)
       console.log(this.station.children)
-      if(this.station.level > 1 && this.station.children.length == 0) {
+      if (this.station.level > 1 && this.station.children.length == 0) {
         Base.stationsFilter(this.station.id)
-      }else {
+      } else {
         this.refresh()
       }
     },
@@ -177,7 +186,7 @@ export default {
     },
 
     move() {
-      if(this.moving) {
+      if (this.moving) {
         this.moving = false
         this.refresh()
         return
@@ -190,10 +199,10 @@ export default {
     },
 
     eventManager(create) {
-      if(create) {
+      if (create) {
         this.station.marker.addEventListener('mousedown', this.markMousedown)
         this.station.marker.addEventListener('mouseup', this.markMouseup)
-      }else {
+      } else {
         this.station.marker.removeEventListener('mousedown', this.markMousedown)
         this.station.marker.removeEventListener('mouseup', this.markMouseup)
       }
@@ -202,6 +211,15 @@ export default {
     delpath(index, field) {
       this.station[field].splice(index, 1)
       this.station.reDraw()
+    },
+
+    editPath(index) {
+      let path = new Path()
+      path.courseList = this.station.paths[index].course.map(item => {
+        return new Marker([item[0], item[1]], path)
+      })
+      path.edit(this.station.id, this.station.paths[index].to)
+      Base.component.toolSwitch(getConfig({net: this.station.net, level: 9}), path)
     }
   },
 
@@ -220,6 +238,7 @@ export default {
 <style lang="scss">
 #staCon {
   height: 100%;
+
   main {
     padding: 10px;
     box-sizing: border-box;
@@ -256,6 +275,7 @@ export default {
     h6 {
       margin: 10px 0;
     }
+
     ul {
       padding: 0;
       margin: 0;
@@ -305,11 +325,13 @@ export default {
           }
         }
 
-        &>main {
+        & > main {
           padding: 0;
+
           ul {
             padding: 0;
             margin: 0;
+
             li {
               margin-bottom: 5px;
               display: flex;

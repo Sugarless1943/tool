@@ -108,21 +108,35 @@ export default class Station {
                 }
             } else {
                 if(choose_type == 9) {
-                    if (marks.length < 2) {
-                        if (marks.length == 0) e.target.setAttribute("path", 0)
-                        if (marks.length == 1) e.target.setAttribute("path", 1)
-                    } else {
-                        marks.forEach(item => {
-                            let dom = item.label.domElement
-                            let path = dom.getAttribute("path") * 1
-                            if (path === 0) {
-                                dom.removeAttribute("path")
-                            }
-                            if (path === 1) {
-                                dom.setAttribute("path", 0)
-                            }
-                        })
-                        e.target.setAttribute("path", 1)
+                    if(Path.path_Edit != null) {
+                        if (marks.length < 2) {
+                            e.target.setAttribute("path", 1)
+                        } else {
+                            marks.map(item => {
+                                let dom = item.label.domElement
+                                if(dom.getAttribute('path') == 1) {
+                                    dom.removeAttribute("path")
+                                }
+                            })
+                            e.target.setAttribute("path", 1)
+                        }
+                    }else {
+                        if (marks.length < 2) {
+                            if (marks.length == 0) e.target.setAttribute("path", 0)
+                            if (marks.length == 1) e.target.setAttribute("path", 1)
+                        } else {
+                            marks.forEach(item => {
+                                let dom = item.label.domElement
+                                let path = dom.getAttribute("path") * 1
+                                if (path === 0) {
+                                    dom.removeAttribute("path")
+                                }
+                                if (path === 1) {
+                                    dom.setAttribute("path", 0)
+                                }
+                            })
+                            e.target.setAttribute("path", 1)
+                        }
                     }
                 }else if(choose_type == 10) {
                     marks.forEach(item => {
@@ -148,6 +162,7 @@ export default class Station {
     }
 
     markInit(choose = Base.component.choose || {net: this.net, level: this.level}) {
+        // console.log(choose, Base.component.station_choose)
         if (choose.level == 2 || choose.level == 3) {
             let station_choose = Base.component.station_choose
             if (station_choose == null) {

@@ -1,3 +1,5 @@
+import Path from './Path'
+
 export default class Base {
     static component = null
     static station_choose = null
@@ -25,6 +27,14 @@ export default class Base {
         Base.component.stations.map(item => {
             item.markInit()
         })
+
+        if(Path.path_Edit) {
+            let startStation = Base.component.stationMap.get(Path.path_Edit.startId)
+            startStation.paths.map(item => {
+                Base.component.stationMap.get(item.to).mark(false)
+                if(item.to == Path.path_Edit.endId)  Base.component.stationMap.get(item.to).mark(true)
+            })
+        }
     }
 
     static editReady(station) {

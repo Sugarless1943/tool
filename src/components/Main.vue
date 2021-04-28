@@ -138,21 +138,24 @@ export default {
         this.stationMap.set(item.id, item)
       })
       this.mapReset(true)
-      Path.path_Mark = false
+      this.pathReset()
       this.station_choose = null
     },
 
-    //左侧导航栏点击
-    toolSwitch(val) {
+    /**
+     * 左侧导航栏点击
+     * @param val 按钮相关配置
+     * @param obj 由其他地方点过来可能会触发的一些配置
+     */
+    toolSwitch(val, obj) {
       //点击了哪个按钮
-      console.log('按钮', val)
+      console.log('按钮', val, obj)
       if (val.active) {
         this.stationFresh()
         this.choose = val
         //取消初始状态的两个事件
         this.mapReset(false)
         Base.configBindRemove()
-        this.pathReset()
         switch (val.level) {
           case 1:
             this.mapStationAdd(true)
@@ -164,7 +167,7 @@ export default {
             break;
           case 9:
           case 10:
-            this.pathMarker()
+            this.pathMarker(obj)
             break;
         }
       } else {
@@ -182,9 +185,9 @@ export default {
       this.map.addEventListener('click', callback)
     },
 
-    pathMarker() {
+    pathMarker(path = new Path()) {
+      if(path.startId && path.endId) Path.path_Edit = path
       Base.stationsMarkInit()
-      let path = new Path()
       path.pathMark()
       Object.defineProperty(Marker, 'change', {
         set() {
@@ -201,6 +204,7 @@ export default {
 
     pathReset() {
       Path.path_Mark = false
+      Path.path_Edit = null
       if (this.path) {
         this.path.clean()
         this.path = null

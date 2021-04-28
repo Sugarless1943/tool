@@ -104,4 +104,15 @@ const colors = {
     n2l2: "#121929"
 }
 
-export {Config, colors}
+const getConfig = function(args) {
+    let res = null
+    Config.map(item => {
+        item.main.map(cfg => {
+            if(cfg.net == args.net && cfg.level == args.level) res = Object.assign(cfg, {active: true})
+        })
+    })
+
+    return res
+}
+
+export {Config, getConfig, colors}

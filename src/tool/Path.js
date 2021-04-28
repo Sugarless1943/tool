@@ -3,6 +3,7 @@ import Base from "./Base";
 
 export default class Path {
     static path_Mark = false
+    static path_Edit = false
 
     constructor(courseList = []) {
         this.courseList = courseList
@@ -40,7 +41,6 @@ export default class Path {
     }
 
     view(execute = false) {
-        // console.log(this.polyline)
         Base.component.map.removeOverlay(this.polyline);
         if(!execute && this.polyline) {
             this.polyline = null
@@ -50,7 +50,6 @@ export default class Path {
             let addressList = [this.start.address, this.end.address]
             if (this.courseList.length > 0) {
                 this.courseList.map((item, index) => {
-                    console.log(item)
                     addressList.splice(index + 1, 0, [item.lng, item.lat])
                 })
             }
@@ -58,6 +57,7 @@ export default class Path {
             let pointList = addressList.map((item) => {
                 return new window.BMapGL.Point(item[0], item[1]);
             });
+            console.log(pointList, 'pointListtttttttttttttttt')
             this.polyline = new window.BMapGL.Polyline(pointList, {
                 strokeColor: "blue",
                 strokeWeight: 2,
@@ -87,7 +87,13 @@ export default class Path {
         this.getStartEnd(() => {
             let station_start = Base.component.stationMap.get(this.start.id)
             let station_end = Base.component.stationMap.get(this.end.id)
-            station_start[station_start.net == station_end.net ? 'paths' : 'net2_child'].push({
+            let aim = station_start[station_start.net == station_end.net ? 'paths' : 'net2_child']
+            if(Path.path_Edit && Path.path_Edit.endId != station_end) {
+               aim.map((item, index) => {
+                   if(item.to == Path.path_Edit.endId) aim.splice(index, 1)
+               })
+            }
+            aim.push({
                 to: this.end.id,
                 course: this.courseList.map(item => {
                     return [item.lng, item.lat]
@@ -98,6 +104,30 @@ export default class Path {
 
             this.clean()
             Base.component.refresh()
+        })
+    }
+
+    edit(startId, endId) {
+        this.startId = startId
+        this.endId = endId
+    }
+
+    editInit() {
+        return new Promise(resolve => {
+            Base.asy(() => {
+                let [start_dom, end_dom] = [document.getElementById(this.startId), document.getElementById(this.endId)]
+                start_dom.classList.add('pathStart')
+                start_dom.classList.add('stanDisabled')
+                start_dom.setAttribute('path', 0)
+
+                end_dom.classList.add('pathEnd')
+                end_dom.setAttribute('path', 1)
+
+                let start_station = Base.component.stationMap.get(this.startId)
+                start_station.mark(false)
+
+                resolve()
+            })
         })
     }
 
@@ -124,6 +154,7 @@ export default class Path {
                 station.paths.map(item => {
                     Base.component.stationMap.get(item.to).mark(false)
                 })
+                if(Path.path_Edit != null) Base.component.stationMap.get(Path.path_Edit.endId).mark(true)
             }
         }
     }

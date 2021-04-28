@@ -27,6 +27,8 @@
 </template>
 
 <script>
+import Marker from "../tool/Marker";
+
 export default {
   name: "OperationTips",
   prop: ["choose", "tipsData"],
@@ -48,14 +50,24 @@ export default {
     },
 
     setOptData(val) {
+      if(val.path) {
+        let path = val.path
+        if(path.startId != null && path.endId != null) this.pathInit(path)
+      }
       this.optData = val
+    },
+
+    pathInit(path) {
+      path.editInit().then(_=> {
+        path.drawCourse()
+        path.view()
+      })
     },
 
     /**
      * 管道路径相关功能
      */
     pathView() {
-      console.log(this.optData.path.courseList)
       this.optData.path.view()
     },
 
