@@ -22,18 +22,10 @@
                 <header>
                   <span>{{ getName(item.to) }}</span>
                   <span>
-                    <i class="el-icon-edit" @click="editPath(index)"></i>
-                <i class="el-icon-close" @click="delpath(index, 'paths')"></i>
+                  <i class="el-icon-edit" @click="editPath(index, 'paths')"></i>
+                  <i class="el-icon-close" @click="delpath(index, 'paths')"></i>
               </span>
                 </header>
-                <!--                <main>-->
-                <!--                  <ul>-->
-                <!--                    <li v-for="addr in item.course">-->
-                <!--                      <el-input v-model="addr[0]"></el-input>-->
-                <!--                      <el-input v-model="addr[1]"></el-input>-->
-                <!--                    </li>-->
-                <!--                  </ul>-->
-                <!--                </main>-->
                 <footer>
                   <div>
                     <label>管径：</label>
@@ -54,17 +46,10 @@
                 <header>
                   <span>{{ getName(item.to) }}</span>
                   <span>
-                <i class="el-icon-close" @click="delpath(index, 'net2_child')"></i>
+                  <i class="el-icon-edit" @click="editPath(index, 'net2_child')"></i>
+                  <i class="el-icon-close" @click="delpath(index, 'net2_child')"></i>
               </span>
                 </header>
-                <!--                <main>-->
-                <!--                  <ul>-->
-                <!--                    <li v-for="addr in item.course">-->
-                <!--                      <el-input v-model="addr[0]"></el-input>-->
-                <!--                      <el-input v-model="addr[1]"></el-input>-->
-                <!--                    </li>-->
-                <!--                  </ul>-->
-                <!--                </main>-->
                 <footer>
                   <div>
                     <label>管径：</label>
@@ -213,13 +198,13 @@ export default {
       this.station.reDraw()
     },
 
-    editPath(index) {
+    editPath(index, field) {
       let path = new Path()
-      path.courseList = this.station.paths[index].course.map(item => {
+      path.courseList = this.station[field][index].course.map(item => {
         return new Marker([item[0], item[1]], path)
       })
-      path.edit(this.station.id, this.station.paths[index].to)
-      Base.component.toolSwitch(getConfig({net: this.station.net, level: 9}), path)
+      path.edit(this.station.id, this.station[field][index].to, field)
+      Base.component.toolSwitch(getConfig({net: this.station.net, level: field == 'paths' ? 9 : 10}), path)
     }
   },
 

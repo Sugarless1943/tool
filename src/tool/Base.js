@@ -30,7 +30,7 @@ export default class Base {
 
         if(Path.path_Edit) {
             let startStation = Base.component.stationMap.get(Path.path_Edit.startId)
-            startStation.paths.map(item => {
+            startStation[Path.path_Edit.type].map(item => {
                 Base.component.stationMap.get(item.to).mark(false)
                 if(item.to == Path.path_Edit.endId)  Base.component.stationMap.get(item.to).mark(true)
             })

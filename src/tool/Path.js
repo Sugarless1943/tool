@@ -107,9 +107,10 @@ export default class Path {
         })
     }
 
-    edit(startId, endId) {
+    edit(startId, endId, field) {
         this.startId = startId
         this.endId = endId
+        this.type = field
     }
 
     editInit() {
@@ -154,7 +155,10 @@ export default class Path {
                 station.paths.map(item => {
                     Base.component.stationMap.get(item.to).mark(false)
                 })
-                if(Path.path_Edit != null) Base.component.stationMap.get(Path.path_Edit.endId).mark(true)
+                if(Path.path_Edit != null) {
+                    Base.component.stationMap.get(Path.path_Edit.startId).mark(false)
+                    Base.component.stationMap.get(Path.path_Edit.endId).mark(true)
+                }
             }
         }
     }

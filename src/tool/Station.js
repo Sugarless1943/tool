@@ -162,7 +162,6 @@ export default class Station {
     }
 
     markInit(choose = Base.component.choose || {net: this.net, level: this.level}) {
-        // console.log(choose, Base.component.station_choose)
         if (choose.level == 2 || choose.level == 3) {
             let station_choose = Base.component.station_choose
             if (station_choose == null) {
