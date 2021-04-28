@@ -23,6 +23,7 @@ export default class Station {
 
         this.paths = paths
         this.pathLineList = []
+        this.nt2LineList = []
 
         this.net2_child = net2_child
     }
@@ -228,19 +229,25 @@ export default class Station {
     }
 
     pathView(active) {
-        // console.log('pathLineList', this.pathLineList)
-        if (this.pathLineList && this.pathLineList.length > 0) {
-            this.pathLineList.map(item => {
+        // console.log(active)
+        this.pathLineView(active, this.paths.map(item => {return Object.assign(item, {color:'blue'})}), 'pathLineList')
+        console.log(this.pathLineList)
+    }
+
+    nth2_childView(active) {
+        this.pathLineView(active, this.net2_child.map(item => {return Object.assign(item, {color:'red'})}), 'nt2LineList')
+    }
+
+    pathLineView(active, lines, listOutside) {
+        if (this[listOutside] && listOutside.length > 0) {
+            this[listOutside].map(item => {
                 Base.component.map.removeOverlay(item)
             })
-            this.pathLineList = []
+            this[listOutside] = []
         }
         if (active) {
-            // console.log('path', this.paths)
-            this.pathLineList = []
-            let paths_cur = this.paths.map(item => {return Object.assign(item, {color:'blue'})})
-            let net2_child_cur = this.net2_child.map(item => {return Object.assign(item, {color:'red'})})
-            let arr = [...paths_cur,...net2_child_cur].map(item => {
+            this[listOutside] = []
+            lines.map(item => {
                 let list = [this.address].concat(item.course)
                 let end = Base.component.stationMap.get(item.to)
                 if (end) {
@@ -251,7 +258,7 @@ export default class Station {
                         return new window.BMapGL.Point(item[0], item[1]);
                     });
                     // console.log(item, 'itemmmmmmmmmmmmmm')
-                    this.pathLineList.push(new window.BMapGL.Polyline(pointList, {
+                    this[listOutside].push(new window.BMapGL.Polyline(pointList, {
                         strokeColor: item.color,
                         strokeWeight: 2,
                         strokeOpacity: 0.5,
@@ -259,7 +266,7 @@ export default class Station {
                 }
             })
 
-            this.pathLineList.map(item => {
+            this[listOutside].map(item => {
                 Base.component.map.addOverlay(item)
             })
         }
