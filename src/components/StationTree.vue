@@ -1,11 +1,14 @@
 <template>
   <el-dialog
-      title="换热站关系树"
+      :title="net + '网换热站关系树'"
       :visible.sync="dialogVisible"
       :fullscreen="true"
       custom-class="staTree"
       :before-close="handleClose">
-    <div id="staTree"></div>
+    <div class="treeBlock">
+      <i class="el-icon-refresh" @click="netExchange"></i>
+      <div id="staTree"></div>
+    </div>
   </el-dialog>
 </template>
 
@@ -18,7 +21,9 @@ export default {
     return {
       dialogVisible: false,
       data: [],
-      dom: document.getElementById("staTree")
+      dom: document.getElementById("staTree"),
+      net: 1,
+      myChart: null
     }
   },
 
@@ -36,7 +41,7 @@ export default {
     },
 
     draw(root) {
-      let myChart = echarts.init(document.getElementById("staTree"));
+      this.myChart = echarts.init(document.getElementById("staTree"));
 
       let options = {
         tooltip: {
@@ -83,20 +88,15 @@ export default {
           }
         ]
       }
-      myChart.setOption(options);
+      this.myChart.setOption(options);
     },
 
     init() {
-      let level_map = {}
+      let level_map = this.getLevelMap(this.net)
       let root = {
         name: "root",
         children: []
       }
-      this.data.forEach(item => {
-        if (!level_map[item.level]) level_map[item.level] = []
-        level_map[item.level].push(item)
-      })
-
       let start = Object.keys(level_map).sort((a, b) => b - a)[0]
       let start_items = level_map[start]
       start_items.map(station => {
@@ -106,9 +106,21 @@ export default {
         })
       })
 
-      console.log(root)
+      // console.log(root)
       this.draw(root)
+    },
 
+    getLevelMap(net) {
+      let level_map = {}
+
+      this.data.forEach(item => {
+        if(item.net == net) {
+          if (!level_map[item.level]) level_map[item.level] = []
+          level_map[item.level].push(item)
+        }
+      })
+
+      return level_map
     },
 
     setChidren(station) {
@@ -124,22 +136,49 @@ export default {
       }
 
       return []
+    },
+
+    netExchange() {
+      this.net == 1 ? this.net = 2 : this.net = 1
+      this.myChart.clear()
+      this.init()
     }
   }
 }
 </script>
 
 <style lang="scss">
-  .staTree {
-    display: flex;
-    flex-direction: column;
 
-    .el-dialog__body {
+    .staTree {
       flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
 
-      #staTree {
+      .el-dialog__body {
+        flex: 1;
+
+        #staTree {
+          height: 100%;
+        }
+      }
+
+      .treeBlock {
         height: 100%;
+        position: relative;
+
+        i {
+          font-size: 28px;
+          position: absolute;
+          left: calc(50% - 14px);
+          z-index: 1;
+
+          &:hover {
+            cursor: pointer;
+            color: #00B5D0;
+          }
+        }
       }
     }
-  }
+
 </style>
