@@ -98,7 +98,8 @@ export default {
       },
 
       markMouseup: e => {
-        this.station.address = [e.latLng.lng, e.latLng.lat]
+        let latLng = this.station.marker.getPosition()
+        this.station.address = [latLng.lng, latLng.lat]
         Base.component.map.removeEventListener('mousemove', this.markMove)
         this.station.pathView(true)
         this.station.net2_childView(true)
