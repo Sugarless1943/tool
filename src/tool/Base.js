@@ -41,7 +41,7 @@ export default class Base {
         // console.log(station, Base.component.stations)
         station.highlight()
         Base.component.stations.map(item => {
-            if(item.level == station.level - 1 && (item.fat == null || item.fat == station.id) && item.net == station.net) {
+            if(item.level == station.level - 1 && (!item.fat || item.fat == station.id) && item.net == station.net) {
                 item.mark(true)
             }else {
                 item.mark(false)
