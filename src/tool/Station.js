@@ -168,9 +168,9 @@ export default class Station {
         if (choose.level == 2 || choose.level == 3) {
             let station_choose = Base.component.station_choose
             if (station_choose == null) {
-                this.mark(this.net == choose.net && this.level == (choose.level - 1) && this.fat == null)
+                this.mark(this.net == choose.net && this.level == (choose.level - 1) && !this.fat)
             } else {
-                this.mark(this.net == choose.net && this.level == (station_choose.level - 1) && (this.fat == null || this.fat == station_choose.id))
+                this.mark(this.net == choose.net && this.level == (station_choose.level - 1) && (!this.fat || this.fat == station_choose.id))
             }
         } else if (choose.level == 9) {
             this.mark(choose.net == this.net && this.level == 1)
