@@ -94,6 +94,7 @@ export default class Base {
         Base.component.stationMap.delete(id)
         Base.component.stations = []
         Base.component.stationMap.forEach(item => {
+            if(item.fat == id) item.fat = null
             Base.component.stations.push(item)
         })
     }
