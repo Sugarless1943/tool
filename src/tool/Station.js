@@ -70,6 +70,7 @@ export default class Station {
         Base.component.stationChoose(this)
         // console.log(this.pathLineList)
         this.pathView(true)
+        this.net2_childView(true)
         if (this.level == 2 || this.level == 3) this.circle(true)
         if (e) e.domEvent.stopPropagation()
     }
@@ -85,6 +86,7 @@ export default class Station {
         this.clean()
         this.draw()
         this.pathView(true)
+        this.net2_childView(true)
     }
 
     markFn(e) {
@@ -229,9 +231,7 @@ export default class Station {
     }
 
     pathView(active) {
-        // console.log(active)
         this.pathLineView(active, this.paths.map(item => {return Object.assign(item, {color:'blue'})}), 'pathLineList')
-        // console.log(this.pathLineList)
     }
 
     net2_childView(active) {
@@ -274,6 +274,7 @@ export default class Station {
 
     viewClean() {
         this.pathView(false)
+        this.net2_childView(false)
         this.circle(false)
         Base.component.map.removeOverlay(this.polygon)
     }

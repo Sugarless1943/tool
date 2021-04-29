@@ -101,6 +101,7 @@ export default {
         this.station.address = [e.latLng.lng, e.latLng.lat]
         Base.component.map.removeEventListener('mousemove', this.markMove)
         this.station.pathView(true)
+        this.station.net2_childView(true)
         // this.moving = false
         // this.refresh()
       },
