@@ -23,7 +23,7 @@ export default class Station {
 
         this.paths = paths
         this.pathLineList = []
-        this.nt2LineList = []
+        this.net2LineList = []
 
         this.net2_child = net2_child
     }
@@ -231,11 +231,11 @@ export default class Station {
     pathView(active) {
         // console.log(active)
         this.pathLineView(active, this.paths.map(item => {return Object.assign(item, {color:'blue'})}), 'pathLineList')
-        console.log(this.pathLineList)
+        // console.log(this.pathLineList)
     }
 
-    nth2_childView(active) {
-        this.pathLineView(active, this.net2_child.map(item => {return Object.assign(item, {color:'red'})}), 'nt2LineList')
+    net2_childView(active) {
+        this.pathLineView(active, this.net2_child.map(item => {return Object.assign(item, {color:'red'})}), 'net2LineList')
     }
 
     pathLineView(active, lines, listOutside) {

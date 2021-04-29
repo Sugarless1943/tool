@@ -83,7 +83,7 @@ export default {
               break;
             case 10:
               if (item.net2_child.length > 0) {
-                item.nth2_childView(val.active)
+                item.net2_childView(val.active)
               }
               break;
             case 0:
