@@ -58,6 +58,7 @@ export default class Base {
             return []
         }
         let children = []
+
         doms.forEach(item => {
             let item_id = item.getAttribute("id")*1
             let chidren_station = Base.component.stationMap.get(item_id)
@@ -67,7 +68,10 @@ export default class Base {
         Base.component.stations.map(item => {
             if(item.fat == id && !children.includes(item.id)) item.fat = null
         })
-        return children
+
+        return children.sort((a,b) => {
+            return document.getElementById(a).getAttribute('clickTime')*1 - document.getElementById(b).getAttribute('clickTime')*1
+        })
     }
 
     static getStationByClassName(className) {

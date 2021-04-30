@@ -154,6 +154,7 @@ export default class Station {
         } else {
             let className = `markern${this.getAttribute("net")}l${this.getAttribute("level")}`
             e.target.classList.toggle(className)
+            e.target.setAttribute('clickTime', new Date().getTime())
         }
         e.stopPropagation()
     }
@@ -194,7 +195,7 @@ export default class Station {
                 let point = new window.BMapGL.Point(child.address[0], child.address[1])
                 points.push(point)
 
-                console.log([this.point, point])
+                // console.log([this.point, point])
                 this.polylineList.push(new window.BMapGL.Polyline([this.point, point], {
                     strokeColor: "blue",
                     strokeStyle: "dashed",
@@ -289,6 +290,7 @@ export default class Station {
 
     highlight() {
         let dom = this.label.domElement
+        dom.setAttribute('clickTime', 0)
         let className = `markern${this.net}l${this.level}`
         dom.classList.add(className)
     }
