@@ -93,21 +93,23 @@ export default {
 
     init() {
       let level_map = this.getLevelMap(this.net)
-      let root = {
-        name: "root",
-        children: []
-      }
-      let start = Object.keys(level_map).sort((a, b) => b - a)[0]
-      let start_items = level_map[start]
-      start_items.map(station => {
-        root.children.push({
-          name: station.name,
-          children: this.setChidren(station)
+      if(Object.keys(level_map).length > 0) {
+        let root = {
+          name: "root",
+          children: []
+        }
+        let start = Object.keys(level_map).sort((a, b) => b - a)[0]
+        let start_items = level_map[start]
+        start_items.map(station => {
+          root.children.push({
+            name: station.name,
+            children: this.setChidren(station)
+          })
         })
-      })
 
-      // console.log(root)
-      this.draw(root)
+        // console.log(root)
+        this.draw(root)
+      }
     },
 
     getLevelMap(net) {
@@ -140,7 +142,7 @@ export default {
 
     netExchange() {
       this.net == 1 ? this.net = 2 : this.net = 1
-      this.myChart.clear()
+      if(this.myChart) this.myChart.clear()
       this.init()
     }
   }
