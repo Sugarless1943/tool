@@ -12,8 +12,8 @@
             <i class="el-icon-close" @click="delCourse(index)"></i>
           </header>
           <main>
-            <el-input v-model.number="item.lat" @input="markChange(item)"></el-input>
-            <el-input v-model.number="item.lng" @input="markChange(item)"></el-input>
+            <el-input v-model="item.lat" @input="markChange(item)"></el-input>
+            <el-input v-model="item.lng" @input="markChange(item)"></el-input>
           </main>
         </li>
       </ul>
@@ -50,15 +50,15 @@ export default {
     },
 
     setOptData(val) {
-      if(val.path) {
+      if (val.path) {
         let path = val.path
-        if(path.startId != null && path.endId != null) this.pathInit(path)
+        if (path.startId != null && path.endId != null) this.pathInit(path)
       }
       this.optData = val
     },
 
     pathInit(path) {
-      path.editInit().then(_=> {
+      path.editInit().then(_ => {
         path.drawCourse()
         path.view()
       })
@@ -72,7 +72,9 @@ export default {
     },
 
     markChange(item) {
-      this.optData.path.reDrawCourse(item)
+      if (item.lat != "" && this.existNum(item.lat) && item.lng != "" && this.existNum(item.lng)) {
+        this.optData.path.reDrawCourse(item)
+      }
     },
 
     delCourse(index) {
@@ -82,8 +84,30 @@ export default {
     },
 
     pathSave() {
-      this.optData.path.save()
+      let inputs = document.querySelectorAll("#pathOpt input")
+      let flag = true
+      let errNums = []
+      inputs.forEach((item, index) => {
+        if (!this.existNum(item.value)) {
+          flag = false
+          errNums.push(index)
+        }
+      })
+
+      if (flag) {
+        this.optData.path.save()
+      } else {
+        this.$message({
+          type: 'error',
+          message: `位置规则错误，请校验${errNums.join(',')}`
+        })
+      }
+    },
+
+    existNum(val) {
+      return val != "" && val != null && val != undefined && !isNaN(val * 1) && typeof (val * 1) == 'number'
     }
+
   },
 
   mounted() {
@@ -119,7 +143,7 @@ export default {
     }
   }
 
-  &>header {
+  & > header {
     margin-bottom: 10px;
   }
 }
