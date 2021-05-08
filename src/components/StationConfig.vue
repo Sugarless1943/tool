@@ -119,36 +119,7 @@ export default {
     },
 
     delSta() {
-      if (this.station.fat != null) {
-        let fat = Base.component.stationMap.get(this.station.fat)
-        if (fat) {
-          fat.children.splice(fat.children.indexOf(this.station.id), 1)
-          fat.children.length == 0 && Base.component.stationMap.delete(fat.id)
-        }
-      }
-      if (this.station.net == 2 && this.station.level == 1) {
-        Base.component.stations.forEach(item => {
-          if (item.net == 1 && item.level == 1 && item.net2_child.length > 0) {
-            item.net2_child.map((chi, index) => {
-              if (chi.to == this.station.id) {
-                item.net2_child.splice(index, 1)
-              }
-            })
-          }
-        })
-      }
-      Base.component.stations.forEach(item => {
-        if (item.fat == this.station.id) {
-          item.fat = null
-        }
-
-        item.paths.forEach((path, index) => {
-          if (path.to == this.station.id) {
-            item.paths.splice(index, 1)
-          }
-        })
-      })
-      Base.stationsFilter(this.station.id)
+      Base.stationDelete(this.station.id)
     },
 
     chiEdit() {
@@ -159,9 +130,8 @@ export default {
     saveEdit() {
       this.editing = false
       this.station.children = Base.setChildren(this.station, false)
-      console.log(this.station.children)
       if (this.station.level > 1 && this.station.children.length == 0) {
-        Base.stationsFilter(this.station.id)
+        this.stationDelete(this.station.id)
       } else {
         this.refresh()
       }

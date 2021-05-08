@@ -94,11 +94,41 @@ export default class Base {
         }, [])
     }
 
+    static stationDelete(id) {
+        Base.stationsFilter(id)
+        Base.createStations()
+    }
+
     static stationsFilter(id) {
+        let station = Base.component.stationMap.get(id)
         Base.component.stationMap.delete(id)
-        Base.component.stations = []
         Base.component.stationMap.forEach(item => {
             if(item.fat == id) item.fat = null
+            if(item.children.includes(id)) {
+                item.children.splice(item.children.indexOf(id), 1)
+            }
+            item.paths.forEach((path, index) => {
+                if (path.to == id) {
+                    item.paths.splice(index, 1)
+                }
+            })
+            if (item.net == 1 && item.level == 1 && item.net2_child.length > 0) {
+                item.net2_child.map((chi, index) => {
+                    if (chi.to == station.id) {
+                        item.net2_child.splice(index, 1)
+                    }
+                })
+            }
+
+            if(item.level > 1 && item.children.length == 0) {
+                Base.stationsFilter(item.id)
+            }
+        })
+    }
+
+    static createStations() {
+        Base.component.stations = []
+        Base.component.stationMap.forEach(item => {
             Base.component.stations.push(item)
         })
     }
