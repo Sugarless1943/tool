@@ -38,6 +38,9 @@ export default {
 
     handleClose() {
       this.dialogVisible = false
+      this.data = []
+      this.myChart.clear()
+      this.myChart = null
     },
 
     draw(root) {
