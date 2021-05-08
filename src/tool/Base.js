@@ -11,6 +11,15 @@ export default class Base {
         }, time)
     }
 
+    static wait(callback, time = 10) {
+        let timer = setInterval(() => {
+            callback(timer)
+        }, time)
+        setTimeout(() => {
+            clearInterval(timer)
+        }, 5000)
+    }
+
     static configBind() {
         Base.component.stations.map(item => {
             item.configBind()

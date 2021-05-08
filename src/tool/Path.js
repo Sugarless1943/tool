@@ -42,7 +42,7 @@ export default class Path {
 
     view(execute = false) {
         Base.component.map.removeOverlay(this.polyline);
-        if(!execute && this.polyline) {
+        if (!execute && this.polyline) {
             this.polyline = null
             return
         }
@@ -88,10 +88,10 @@ export default class Path {
             let station_start = Base.component.stationMap.get(this.start.id)
             let station_end = Base.component.stationMap.get(this.end.id)
             let aim = station_start[station_start.net == station_end.net ? 'paths' : 'net2_child']
-            if(Path.path_Edit && Path.path_Edit.endId != station_end) {
-               aim.map((item, index) => {
-                   if(item.to == Path.path_Edit.endId) aim.splice(index, 1)
-               })
+            if (Path.path_Edit && Path.path_Edit.endId != station_end) {
+                aim.map((item, index) => {
+                    if (item.to == Path.path_Edit.endId) aim.splice(index, 1)
+                })
             }
             aim.push({
                 to: this.end.id,
@@ -115,19 +115,22 @@ export default class Path {
 
     editInit() {
         return new Promise(resolve => {
-            Base.asy(() => {
-                let [start_dom, end_dom] = [document.getElementById(this.startId), document.getElementById(this.endId)]
-                start_dom.classList.add('pathStart')
-                start_dom.classList.add('stanDisabled')
-                start_dom.setAttribute('path', 0)
+            Base.wait(timer => {
+                if (document.getElementById(this.startId) && document.getElementById(this.endId)) {
+                    let [start_dom, end_dom] = [document.getElementById(this.startId), document.getElementById(this.endId)]
+                    start_dom.classList.add('pathStart')
+                    start_dom.classList.add('stanDisabled')
+                    start_dom.setAttribute('path', 0)
 
-                end_dom.classList.add('pathEnd')
-                end_dom.setAttribute('path', 1)
+                    end_dom.classList.add('pathEnd')
+                    end_dom.setAttribute('path', 1)
 
-                let start_station = Base.component.stationMap.get(this.startId)
-                start_station.mark(false)
+                    let start_station = Base.component.stationMap.get(this.startId)
+                    start_station.mark(false)
 
-                resolve()
+                    resolve()
+                    clearInterval(timer)
+                }
             })
         })
     }
@@ -155,7 +158,7 @@ export default class Path {
                 station.paths.map(item => {
                     Base.component.stationMap.get(item.to).mark(false)
                 })
-                if(Path.path_Edit != null) {
+                if (Path.path_Edit != null) {
                     Base.component.stationMap.get(Path.path_Edit.startId).mark(false)
                     Base.component.stationMap.get(Path.path_Edit.endId).mark(true)
                 }
