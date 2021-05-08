@@ -131,7 +131,7 @@ export default {
       this.editing = false
       this.station.children = Base.setChildren(this.station, false)
       if (this.station.level > 1 && this.station.children.length == 0) {
-        this.stationDelete(this.station.id)
+        Base.stationDelete(this.station.id)
       } else {
         this.refresh()
       }

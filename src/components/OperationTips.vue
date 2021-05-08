@@ -86,11 +86,11 @@ export default {
     pathSave() {
       let inputs = document.querySelectorAll("#pathOpt input")
       let flag = true
-      let errNums = []
+      let errNums = new Set()
       inputs.forEach((item, index) => {
         if (!this.existNum(item.value)) {
           flag = false
-          errNums.push(index)
+          errNums.add(Math.floor(index / 2) + 1)
         }
       })
 
@@ -99,7 +99,7 @@ export default {
       } else {
         this.$message({
           type: 'error',
-          message: `位置规则错误，请校验${errNums.join(',')}`
+          message: `位置规则错误，请校验${[...errNums].join(',')}组规则`
         })
       }
     },
